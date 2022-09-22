@@ -64,6 +64,9 @@ docker-compose up
 - RabbitMQ dashboard can be accessed from `http://localhost:15672` 
     - username/password = guest
 
+![image output](./rabbitmq/output.png)
+
+![image rabbitmq-dashboard](./rabbitmq/rabbitmq-dashboard.png)
 
 ### References
 
