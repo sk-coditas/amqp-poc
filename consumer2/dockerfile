@@ -17,7 +17,6 @@ WORKDIR /opt/producer-service
 
 # Install app dependencies
 COPY package.json .
-COPY package-lock.json .
 
 RUN npm install
 
