@@ -1,0 +1,17 @@
+FROM rabbitmq:3-management-alpine
+
+RUN apk add curl vim
+
+# Define environment variables.
+ENV RABBITMQ_USER guest
+ENV RABBITMQ_PASSWORD guest
+
+ADD bootstrap-mq.sh /
+ADD startup.sh /
+RUN chmod +x /bootstrap-mq.sh
+RUN chmod +x /startup.sh
+EXPOSE 15672
+EXPOSE 5672
+
+# Define default command
+CMD ["/startup.sh"]

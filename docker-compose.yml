@@ -1,0 +1,70 @@
+version: "3.2"
+services:
+  rabbitmq:
+    build: ./rabbitmq
+    container_name: "rabbitmq"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - host_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  producer:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build: ./producer
+    container_name: "producer"
+    environment:
+      - APP_NAME=PRODUCER
+      - MQ_HOST=rabbitmq
+      - MQ_PORT=5672
+      - MQ_USERNAME=guest
+      - MQ_PASSWORD=guest
+      - MQ_PROTOCOL=amqp
+    networks:
+      - host_network
+
+  consumer1:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build: ./consumer1
+    container_name: "consumer1"
+    environment:
+      - APP_NAME=CONSUMER_1
+      - MQ_HOST=rabbitmq
+      - MQ_PORT=5672
+      - MQ_USERNAME=guest
+      - MQ_PASSWORD=guest
+      - MQ_PROTOCOL=amqp
+    networks:
+      - host_network
+
+  consumer2:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build: ./consumer2
+    container_name: "consumer2"
+    environment:
+      - APP_NAME=CONSUMER_2
+      - MQ_HOST=rabbitmq
+      - MQ_PORT=5672
+      - MQ_USERNAME=guest
+      - MQ_PASSWORD=guest
+      - MQ_PROTOCOL=amqp
+    networks:
+      - host_network
+
+networks:
+  host_network:
+    driver: bridge
